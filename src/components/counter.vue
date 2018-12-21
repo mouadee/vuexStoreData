@@ -11,31 +11,24 @@
         <button @click="decrease" class="btn btn-danger">Decrease</button>
         <hr>
         <button @click="reset" class="btn btn-primary">Reset</button>
+        <hr>
+        <button @click="n_increase" class="btn btn-secondary">+5 Inc</button>
     </div>
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+    import {mapGetters, mapMutations} from "vuex";
     import swal from "sweetalert";
     export default {
         computed: {
-            ...mapGetters(["counter", "doubledCounter"]),
+            ... mapGetters(["counter", "doubledCounter"]),
           multiCounter() {
               return this.$store.getters.multiCounter(4);
           }
         },
         methods: {
-            increase (){
-                this.$store.state.counter ++;
-            },
-            decrease (){
-                this.$store.state.counter --;
-            },
+            ... mapMutations(["increase", "decrease"]),
             reset() {
-                /*if (confirm('Do you want to reset the counter?')) {
-                    this.$store.state.counter = 0;
-                }*/
-
                 swal({
                     title: "Are you sure to reset the counter?",
                     text: "Once reset it, you will not be able to se this data!",
@@ -48,12 +41,15 @@
                             swal("Your data has been deleted!", {
                                 icon: "success",
                             });
-                            return this.$store.state.counter = 0;
+                            return this.$store.commit('reset');
                         } else {
                             swal("Your counter still alive!");
                         }
                     });
 
+            },
+            n_increase() {
+                this.$store.commit('n_increase', 5);
             }
         }
     }
